@@ -5,7 +5,6 @@
 //  Created by yerimhuh on 2020/04/01.
 //  Copyright © 2020 yerimhuh. All rights reserved.
 //
-
 #include <stdio.h>
 #include <string.h>
 
@@ -21,13 +20,11 @@ enum token tok;
 int input;
 int r;
 
+
 int main(){
     get_next_token();
     r = expr();
     printf("%d",r);
-   
-   
-   
 }
 
 void get_next_token(){
@@ -35,26 +32,26 @@ void get_next_token(){
     switch(input){
         case '+':
             tok = PLUS;
-            return;
+            return ;
         case '*':
             tok = STAR;
-            return;
+            return ;
         case '(':
             tok = LP;
-            return;
+            return ;
         case ')':
             tok = RP;
-            return;
+            return ;
     }
     if(is_num(input)){
         tok = NUMBER;
-        return;
+        return ;
     }
     }
     
 
 int expr(){
-    term();
+    r = term();
        while(tok == PLUS){
            get_next_token();
            r += term();
@@ -66,7 +63,7 @@ int term(){
     r = factor();
     while(tok == STAR){
         get_next_token();
-        factor();
+        r *= factor();
     }
     return r;
 }
@@ -77,8 +74,10 @@ void error(){
 
 
 int factor(){
-    if(tok == NUMBER)
+    if(tok == NUMBER){
         get_next_token();
+       // r = NUMBER;
+    }
     else if(tok == LP){
         get_next_token();
         r = expr();
@@ -86,7 +85,8 @@ int factor(){
             get_next_token();
         else
             error();
-        error();
     }
+    else
+        error();
     return r;
 }
