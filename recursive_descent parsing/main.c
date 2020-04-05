@@ -7,7 +7,7 @@
 //
 #include <stdio.h>
 #include <string.h>
-
+#include <stdlib.h>
 #define MAX_LENGTH 64
 #define is_num(c) ((c) >= '0' && (c) <= '9')
 void get_next_token(void);
@@ -15,20 +15,26 @@ int expr(void);
 int term(void);
 int factor(void);
 
-enum token{PLUS,STAR,LP,RP,NUMBER,END};
+enum token{PLUS = 0,STAR,LP,RP,NUMBER,END};
 enum token tok;
 int input;
-int r;
+int r = 0;
 
 
 int main(){
     get_next_token();
     r = expr();
-    printf("%d",r);
+    printf("계산 결과 = %d\n",r);
+    while(tok == END){
+        printf("프로그램 끝\n");
+        exit(1);
+    }
 }
 
 void get_next_token(){
+    
     input = getchar();
+
     switch(input){
         case '+':
             tok = PLUS;
@@ -43,18 +49,25 @@ void get_next_token(){
             tok = RP;
             return ;
     }
+
     if(is_num(input)){
+        input = input-'0';
         tok = NUMBER;
         return ;
-    }
+       }
+    
+    if(input == 10){
+        fflush(stdin);
+        tok = END;
     }
     
-
+}
 int expr(){
     r = term();
        while(tok == PLUS){
+           r = term();
            get_next_token();
-           r += term();
+           r = r + term();
        }
     return r;
 }
@@ -62,31 +75,44 @@ int expr(){
 int term(){
     r = factor();
     while(tok == STAR){
+        r = factor();
         get_next_token();
-        r *= factor();
+        r = r * factor();
     }
     return r;
 }
 
 void error(){
     printf("error입니다. \n");
+    exit(1);
 }
 
 
 int factor(){
     if(tok == NUMBER){
+        r = input;
         get_next_token();
-       // r = NUMBER;
+       
     }
     else if(tok == LP){
         get_next_token();
         r = expr();
-        if(tok == RP)
+        if(tok == RP){
             get_next_token();
+            r = expr();
+        }
+        else{
+            if(tok == END)
+                return r;
+            else
+                error();
+        }
+    }
+    else{
+        if(tok == PLUS || tok == STAR)
+            return r;
         else
             error();
     }
-    else
-        error();
     return r;
 }
