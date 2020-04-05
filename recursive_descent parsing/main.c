@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
+
 #define MAX_LENGTH 64
 #define is_num(c) ((c) >= '0' && (c) <= '9')
 void get_next_token(void);
@@ -33,8 +35,11 @@ int main(){
 
 void get_next_token(){
     
-    input = getchar();
-
+    while((input = getchar()) != EOF){
+        if( input == ' ' || input == '\t')
+              continue;
+        break;
+    }
     switch(input){
         case '+':
             tok = PLUS;
@@ -60,7 +65,6 @@ void get_next_token(){
         fflush(stdin);
         tok = END;
     }
-    
 }
 int expr(){
     r = term();
@@ -116,3 +120,5 @@ int factor(){
     }
     return r;
 }
+
+
