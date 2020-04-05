@@ -39,7 +39,7 @@ void get_next_token(){
         if( input == ' ' || input == '\t')
               continue;
         break;
-    }
+    } // 공백을 무시하고 계산
     switch(input){
         case '+':
             tok = PLUS;
@@ -64,14 +64,14 @@ void get_next_token(){
     if(input == 10){
         fflush(stdin);
         tok = END;
-    }
+    }//enter키를 입력했을 때, 프로그램 종료를 의미
 }
 int expr(){
     r = term();
        while(tok == PLUS){
            r = term();
            get_next_token();
-           r = r + term();
+           r = r + term(); // 덧셈 계산
        }
     return r;
 }
@@ -81,7 +81,7 @@ int term(){
     while(tok == STAR){
         r = factor();
         get_next_token();
-        r = r * factor();
+        r = r * factor(); // 곱셈 계산
     }
     return r;
 }
@@ -89,22 +89,21 @@ int term(){
 void error(){
     printf("error입니다. \n");
     exit(1);
-}
+} // error 발생시 error 출력 후 프로그램 종료
 
 
 int factor(){
     if(tok == NUMBER){
         r = input;
         get_next_token();
-       
-    }
+    } // 정수 값 입력시 정수 값 저장
     else if(tok == LP){
         get_next_token();
         r = expr();
         if(tok == RP){
             get_next_token();
             r = expr();
-        }
+        } // 괄호 계산
         else{
             if(tok == END)
                 return r;
